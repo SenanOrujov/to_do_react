@@ -1,4 +1,4 @@
-import { Checkbox, Modal, message } from "antd";
+import { Checkbox, Modal, Popconfirm, message } from "antd";
 import React, { useState } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
@@ -80,13 +80,20 @@ const ToDoItem = ({ task, index, onToggle, fetchData }) => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={[
-          <button
-            key='remove'
-            onClick={handleDelete}
-            className='bg-red-500 text-white px-4 py-2 rounded-lg m-1'
+          <Popconfirm
+            title='Are you sure you want to delete this item?'
+            description='This action cannot be undone.'
+            onConfirm={handleDelete}
+            okText='Yes'
+            cancelText='No'
           >
-            Remove
-          </button>,
+            <button
+              key='remove'
+              className='bg-red-500 text-white px-4 py-2 rounded-lg m-1'
+            >
+              Remove
+            </button>
+          </Popconfirm>,
           <button
             key='edit'
             onClick={handleEditTask}
@@ -100,9 +107,9 @@ const ToDoItem = ({ task, index, onToggle, fetchData }) => {
           type='text'
           defaultValue={task.name}
           onChange={(e) => setEditedTask(e.target.value)}
-          className='text-lg focus:outline-none p-3 w-full '
+          className=' resize-none text-lg focus:outline-none p-3 w-full '
         />
-        <p className='text-sm text-gray-600 mt-4'>
+        <p className=' text-sm text-gray-600 mt-4'>
           {dayjs(task.date).format("MMMM D, YYYY h:mm A")}
         </p>
       </Modal>

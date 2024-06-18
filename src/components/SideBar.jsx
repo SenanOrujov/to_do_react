@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LogoutOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { message } from "antd";
+import { Popconfirm, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { logOutAction } from "../redux/slice/accountSlice";
+import axiosInstance from "../utils/axiosInstance";
 
 const SideBar = () => {
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ const SideBar = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(apiEndpoint, {
+        const response = await axiosInstance.get(apiEndpoint, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -37,7 +38,7 @@ const SideBar = () => {
   const handleLogOut = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_APP_API_ENDPOINT}/Account/SignOut`,
         null,
         {
@@ -66,16 +67,24 @@ const SideBar = () => {
           {user.email}
         </h6>
       </div>
-      <button
-        disabled={loading}
-        onClick={handleLogOut}
-        className='w-full h-10 bg-red-700 rounded-lg flex justify-around items-center hover:bg-red-800'
+      <Popconfirm
+        title='Log out'
+        description='Are you sure for log out?'
+        onConfirm={handleLogOut}
+        okText='Yes'
+        cancelText='No'
       >
-        <h1 className='text-white font-medium flex items-center justify-center'>
-          Log Out
-        </h1>
-        <LogoutOutlined className='text-xl hidden md:block' />
-      </button>
+        <button
+          disabled={loading}
+          className='w-full h-10 bg-red-700 rounded-lg flex justify-around items-center hover:bg-red-800'
+        >
+          <h1 className='text-white font-medium flex items-center justify-center'>
+            Log Out
+          </h1>
+
+          <LogoutOutlined className='text-xl hidden md:block' />
+        </button>
+      </Popconfirm>
     </div>
   );
 };
