@@ -133,7 +133,7 @@ const BodyArea = () => {
       <div className='h-[12%] p-5  flex justify-center items-center'>
         <textarea
           type='text'
-          className='py-3 pl-10 w-full h-full bg-zinc-600 bg-opacity-70 rounded-lg placeholder-gray-400 focus:bg-opacity-80 focus:outline-none  text-white'
+          className='resize-none py-3 pl-10 w-full h-full bg-zinc-600 bg-opacity-70 rounded-lg placeholder-gray-400 focus:bg-opacity-80 focus:outline-none  text-white'
           placeholder={placeholder}
           onFocus={handleFocus}
           onBlur={handleBlur}

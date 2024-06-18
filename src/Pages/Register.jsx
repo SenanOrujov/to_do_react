@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../assets/Logo.png";
 import register from "../assets/register.jpg";
 import { useFormik } from "formik";
@@ -14,6 +14,15 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const formik = useFormik({
     initialValues: {
@@ -53,15 +62,15 @@ const Register = () => {
             },
           }
         );
-        message.loading({ content: "Registration successful!", duration: 3 });
+        message.success({ content: "Registration successful!", duration: 3 });
         navigate("/login");
       } catch (error) {
         if (error.response) {
           setErrorMessage(error.response.data.message);
-          message.error("Error:", error.response.data);
+          message.error(`Error: ${error.response.data.message}`);
         } else {
           setErrorMessage("An error occurred. Please try again.");
-          message.error("Error message:", error.message);
+          message.error(`Error: ${error.message}`);
         }
       } finally {
         setLoading(false);
@@ -72,7 +81,7 @@ const Register = () => {
   return (
     <div className='w-full h-screen flex bg-[#F7FAFC]'>
       {/* Left Side */}
-      <div className='w-full max-w-[750px]  flex flex-col'>
+      <div className='w-full max-w-[750px] flex flex-col'>
         <div className='pb-0 p-8 flex items-center'>
           <img src={logo} alt='logo' className='w-[30px] h-[28px] mr-3' />
           <h1 className='text-2xl font-bold text-[#3182CE]'>To Do</h1>

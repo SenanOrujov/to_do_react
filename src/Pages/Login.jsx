@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import logo from "../assets/Logo.png";
 import register from "../assets/register.jpg";
 import { useFormik } from "formik";
@@ -7,18 +8,23 @@ import { Alert, message, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
 import { logInAction } from "../redux/slice/accountSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
 
 const apiEndpoint = `${import.meta.env.VITE_APP_API_ENDPOINT}/Account/Login`;
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
-
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   const formik = useFormik({
     initialValues: {
@@ -52,7 +58,7 @@ const Login = () => {
       } catch (error) {
         if (error.response) {
           setErrorMessage(error.response.data.message);
-          message.error("Faild to login");
+          message.error("Failed to login");
         } else {
           setErrorMessage("An error occurred. Please try again.");
           message.error("An error occurred. Please try again.");
